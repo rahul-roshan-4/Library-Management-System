@@ -1,0 +1,36 @@
+version: "3"
+services:
+  frontend:
+    build: ./client
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+
+  backend:
+    build: ./server
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    volumes:
+      - ./:/app
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DB: library
+
+  mysql:
+    image: mysql
+    volumes:
+      - library_management_system:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: library
+      MYSQL_AUTHENTICATION_PLUGIN: caching_sha2_password
+    ports:
+      - "3308:3306"
+
+volumes:
+  library_management_system:
